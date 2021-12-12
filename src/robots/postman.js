@@ -8,14 +8,7 @@ async function robot(content) {
     embeds: [content.embed]
   };
 
-  await axios({
-    url,
-    method: "post",
-    headers: {
-      "Content-Type": "application/json"
-    },
-    data: message
-  });
+  await axios.post(url, message);
 }
 
 module.exports = robot;

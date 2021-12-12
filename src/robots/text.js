@@ -1,27 +1,35 @@
-const NewsAPI = require("newsapi");
-const { apiKey } = process.env;
+const axios = require("axios");
 
 async function robot(content) {
-  await getArticle();
-  createLink();
+  await getContent();
+  await createContinuation();
+  await createLink();
 
-  async function getArticle() {
-    const authenticatedInstance = new NewsAPI(apiKey);
-    const apiResponse = await authenticatedInstance.v2.topHeadlines({
-      category: "technology",
-      pageSize: 1,
-      language: "pt",
-      country: "pt"
-    });
+  async function getContent() {
+    const url =
+      "http://servicodados.ibge.gov.br/api/v3/noticias/" +
+      "?busca=tecnologia" +
+      "&introsize=2000";
+    const { data } = await axios.get(url);
+    const article = data.items[0];
+    content.article = article;
+  }
 
-    content.article = apiResponse.articles[0];
+  function createContinuation() {
+    if (content.article.introducao.length > 539) {
+      const { article: { introducao: text } } = content;
+      const chars = text.substr(0, 539);
+      const link = `[continue lendo](${content.article.link})`;
+      content.article.introducao = chars + "..." + link;
+    }
   }
 
   function createLink() {
-    const { article: { content: text } } = content;
-    const chars = text.substr(0, 195);
-    const link = `[continuação](${content.article.url})`;
-    content.article.content = chars + "..." + link;
+    const { article: { imagens } } = content;
+
+    const { image_intro } = JSON.parse(imagens);
+    const link = image_intro.replace("/", "/");
+    content.article.image = "http://agenciadenoticias.ibge.gov.br/" + link;
   }
 }
 
