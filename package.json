@@ -1,6 +1,6 @@
 {
   "name": "newsboy",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "a personal bot, to send me my little daily newspaper",
   "main": "./src/index.js",
   "scripts": {
@@ -23,7 +23,7 @@
   },
   "homepage": "https://github.com/HarukaYamamoto0/newsboy#readme",
   "devDependencies": {
-    "npm": "^8.2.0"
+    "npm": "^8.3.0"
   },
   "author": "HarukaYamamoto0 - github"
 }
