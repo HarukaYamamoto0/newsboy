@@ -28,7 +28,7 @@ async function robot(content) {
     const { article: { imagens } } = content;
 
     const { image_intro } = JSON.parse(imagens);
-    const link = image_intro.replace("/", "/");
+    const link = image_intro.replace("\/", "/");
     content.article.image = "http://agenciadenoticias.ibge.gov.br/" + link;
   }
 }
