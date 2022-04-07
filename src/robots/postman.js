@@ -1,5 +1,5 @@
 const axios = require("axios");
-const { url, username, avatar_url } = process.env;
+const { webhookUrl, username, avatar_url } = process.env;
 
 async function robot(content) {
   const message = {
@@ -8,7 +8,7 @@ async function robot(content) {
     embeds: [content.embed]
   };
 
-  await axios.post(url, message);
+  await axios.post(webhookUrl, message);
 }
 
 module.exports = robot;
