@@ -1,36 +1,24 @@
-const axios = require("axios");
+const puppeteer = require("puppeteer");
 
 async function robot(content) {
-  await getContent();
-  await createContinuation();
-  await createLink();
+  const browser = await puppeteer.launch({ args: ["--no-sandbox"] });
+  const page = await browser.newPage();
 
-  async function getContent() {
-    const url =
-      "http://servicodados.ibge.gov.br/api/v3/noticias/" +
-      "?busca=tecnologia" +
-      "&introsize=2000";
-    const { data } = await axios.get(url);
-    const article = data.items[0];
-    content.article = article;
-  }
+  await page.goto("https://g1.globo.com/tecnologia/");
+  const result = await page.evaluate(() => {
+    const getElement = (query) => document.querySelectorAll(query)[0];
 
-  function createContinuation() {
-    if (content.article.introducao.length > 539) {
-      const { article: { introducao: text } } = content;
-      const chars = text.substr(0, 539);
-      const link = `[continue lendo](${content.article.link})`;
-      content.article.introducao = chars + "..." + link;
-    }
-  }
+    const result = {
+      title: getElement(".feed-post-body-title").innerText,
+      url: getElement("a.feed-post-link").href,
+      resume: getElement(".feed-post-body-resumo").innerText,
+      image: getElement(".bstn-fd-picture-image").src,
+    };
 
-  function createLink() {
-    const { article: { imagens } } = content;
-
-    const { image_intro } = JSON.parse(imagens);
-    const link = image_intro.replace("/", "/");
-    content.article.image = "http://agenciadenoticias.ibge.gov.br/" + link;
-  }
+    return result;
+  });
+  
+  content.article = result;
 }
 
 module.exports = robot;
