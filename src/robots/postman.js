@@ -1,14 +1,19 @@
-const axios = require("axios");
-const { webhookUrl, username, avatar_url } = process.env;
+const { username, avatarURL, webhookUrl } = process.env;
 
 async function robot(content) {
-  const message = {
-    username,
-    avatar_url,
-    embeds: [content.embed]
-  };
+  const { webhook } = content;
 
-  await axios.post(webhookUrl, message);
+  await webhook.send({
+    content: content.article.content,
+    username,
+    avatarURL,
+    files: [
+      {
+        attachment: content.article.image,
+        name: "image.png",
+      },
+    ],
+  });
 }
 
 module.exports = robot;
