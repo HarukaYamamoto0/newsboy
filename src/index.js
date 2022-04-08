@@ -1,6 +1,6 @@
 const robots = {
   text: require("./robots/text.js"), // get an article in the api
-  embed: require("./robots/embed.js"), // generates an embed from the article
+  webhook : require("./robots/webhook.js"), // if the webhook does not exist it creates a
   postman: require("./robots/postman.js")  // send embed using discord api
 };
 
@@ -9,9 +9,9 @@ async function start() {
     const content = {};
 
     await robots.text(content);
-    await robots.embed(content);
+    await robots.webhook(content);
     await robots.postman(content);
-    await console.log("successfully sent embed");
+    await console.log("The article has been sent successfully!");
 
     setInterval(start, 86400000);
   } catch (err) {
